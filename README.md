@@ -2,7 +2,11 @@
 
 - Install docker and docker-compose
 
-# Quickstart
+# Quickstart
+
+Note : I used port 2222, feel free to change that in `docker-compose.yml`
+
+## Create the server's identity
 
 Generate ed25519 key:
 
@@ -10,22 +14,30 @@ Generate ed25519 key:
 
 (empty passphrase)
 
+## Authorizing clients
+
 Add the public keys you want to authorize in the `allowed-clients-publickeys` directory (don't forget to `chmod 600` the keys)
 
-Start the sftp server :
+## Start and test the sftp server
+
+Important: make sure you have `fail2ban` installed on your server to prevent bruteforce password attacks
 
 `docker-compose up -d`
 
-Important: make sure you have fail2ban installed on your server to prevent bruteforce password attacks
+## Test the connection locally:
 
-Test the connection locally :
+Authorize your computer using a ssh key:
+
+`cp ~/.ssh/id_rsa.pub allowed-clients-publickeys`
+
+Test :
 
 `sftp -P 2222 backupuser@127.0.0.1`
 
-On the remote server from which you want to backup :
+## Test and use from another computer or server
 
-- keyscan your backup server : `ssh-keyscan -p <port> <host> >> ~/.ssh/known_hosts`
-- test the connection :
+- Optional, but to prevent an interactive "do you trust this server" prompt, keyscan your backup server : `ssh-keyscan -p <port> <host> >> ~/.ssh/known_hosts`
+- Try sending a file:
 
 ```bash
   echo "test" > test.txt
