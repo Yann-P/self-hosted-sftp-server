@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  sftp:
+    container_name: sftp-server
+    restart: always
+    image: atmoz/sftp
+    volumes:
+      - "./files:/home/backupuser/upload"
+      - "./ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro"
+      - "./allowed-clients-publickeys/:/home/backupuser/.ssh/keys/:ro"
+    ports:
+      - "2222:22"
+    command: 'backupuser::1001'
